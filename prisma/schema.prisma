@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum PostType {
+  INNER
+  OUTER
+}
+
+enum PostStatus {
+  PRIVATE
+  PUBLIC
+}
+
+model User {
+  id             String   @id @default(uuid())
+  email          String   @unique
+  passwordHash   String   @map("password_hash")
+  viewPreference String   @default("list") @map("view_preference")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  posts Post[]
+
+  @@map("users")
+}
+
+model Post {
+  id        String      @id @default(uuid())
+  userId    String      @map("user_id")
+  type      PostType    @default(INNER)
+  status    PostStatus  @default(PRIVATE)
+  title     String?
+  bodyText  String      @map("body_text") @db.Text
+  createdAt DateTime    @map("created_at")
+  dayKey    DateTime    @map("day_key") @db.Date
+  deletedAt DateTime?   @map("deleted_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId, type, dayKey, createdAt])
+  @@index([userId, type, createdAt])
+  @@map("posts")
+}
