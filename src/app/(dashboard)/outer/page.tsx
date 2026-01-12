@@ -37,8 +37,8 @@ export default async function OuterPostsPage() {
         select: { username: true },
     })
 
-    const drafts = posts.filter((p) => p.status === 'DRAFT')
-    const published = posts.filter((p) => p.status === 'PUBLISHED')
+    const drafts = posts.filter((p: any) => p.status === 'DRAFT')
+    const published = posts.filter((p: any) => p.status === 'PUBLISHED')
 
     return (
         <div className="max-w-4xl mx-auto p-6">
