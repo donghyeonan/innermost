@@ -56,10 +56,10 @@ export async function GET(request: NextRequest) {
         })
 
         // Format response
-        const meta = entryCounts.map((item: { dayKey: Date; _count: { id: number } }) => ({
-            date: formatDate(item.dayKey),
+        const meta = entryCounts.map((item: { dayKey: Date | null; _count: { id: number } }) => ({
+            date: item.dayKey ? formatDate(item.dayKey) : '',
             count: item._count.id,
-        }))
+        })).filter(item => item.date !== '')
 
         return NextResponse.json({
             month,

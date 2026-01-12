@@ -48,3 +48,82 @@ export const monthSchema = z.string().regex(/^\d{4}-\d{2}$/, 'Invalid month form
 export type RegisterInput = z.infer<typeof registerSchema>
 export type LoginInput = z.infer<typeof loginSchema>
 export type UpdateUserInput = z.infer<typeof updateUserSchema>
+
+// === Phase 2: Outer Post Validations ===
+
+// Reserved usernames that cannot be used for public routing
+export const RESERVED_USERNAMES = [
+    'login',
+    'register',
+    'logout',
+    'api',
+    'dashboard',
+    'settings',
+    'admin',
+    'public',
+    'inner',
+    'outer',
+    'notes',
+    'about',
+    'work',
+    'home',
+    '_next',
+    'favicon.ico',
+]
+
+// Outer post title validation
+export const outerTitleSchema = z
+    .string()
+    .min(1, 'Title is required')
+    .max(200, 'Title cannot exceed 200 characters')
+    .transform((text) => text.trim())
+
+// Outer post slug validation
+export const outerSlugSchema = z
+    .string()
+    .min(1, 'Slug is required')
+    .max(100, 'Slug cannot exceed 100 characters')
+    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Slug must be lowercase with hyphens only')
+
+// Outer post excerpt validation
+export const outerExcerptSchema = z
+    .string()
+    .max(300, 'Excerpt cannot exceed 300 characters')
+    .optional()
+
+// Create outer post schema (draft)
+export const createOuterPostSchema = z.object({
+    title: outerTitleSchema.optional(), // Optional for initial draft
+    bodyText: z.string().optional().default(''),
+    contentJson: z.any().optional(), // Tiptap JSON
+})
+
+// Update outer post schema
+export const updateOuterPostSchema = z.object({
+    title: outerTitleSchema.optional(),
+    bodyText: z.string().optional(),
+    contentJson: z.any().optional(),
+    contentHtml: z.string().optional(),
+    excerpt: outerExcerptSchema,
+    slug: outerSlugSchema.optional(),
+    coverImage: z.string().url().optional().nullable(),
+    isFeatured: z.boolean().optional(),
+    gridSize: z.enum(['1x1', '2x2']).optional().nullable(),
+    references: z.array(z.object({
+        id: z.string(),
+        bodyText: z.string(),
+        createdAt: z.string(),
+        citedAt: z.string(),
+    })).max(10, 'Maximum 10 references allowed').optional(),
+})
+
+// Publish outer post schema
+export const publishOuterPostSchema = z.object({
+    title: outerTitleSchema, // Required for publish
+    bodyText: z.string().min(1, 'Content is required'),
+})
+
+// Types
+export type CreateOuterPostInput = z.infer<typeof createOuterPostSchema>
+export type UpdateOuterPostInput = z.infer<typeof updateOuterPostSchema>
+export type PublishOuterPostInput = z.infer<typeof publishOuterPostSchema>

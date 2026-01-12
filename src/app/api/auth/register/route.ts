@@ -1,9 +1,48 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { hashPassword, setAuthCookies } from '@/lib/auth'
-import { registerSchema } from '@/lib/validations'
+import { registerSchema, RESERVED_USERNAMES } from '@/lib/validations'
 
 export const runtime = 'nodejs'
+
+/**
+ * Generate username from email prefix
+ */
+function generateUsername(email: string): string {
+    const prefix = email.split('@')[0]
+    const sanitized = prefix.toLowerCase().replace(/[^a-z0-9]/g, '_')
+    return sanitized.replace(/_+/g, '_').replace(/^_|_$/g, '') || 'user'
+}
+
+/**
+ * Ensure username is unique
+ */
+async function getUniqueUsername(baseUsername: string): Promise<string> {
+    // Check if base is available
+    const existing = await prisma.user.findUnique({
+        where: { username: baseUsername },
+        select: { id: true },
+    })
+
+    if (!existing && !RESERVED_USERNAMES.includes(baseUsername)) {
+        return baseUsername
+    }
+
+    // Add suffix until unique
+    let suffix = 1
+    let username = `${baseUsername}${suffix}`
+    while (true) {
+        const check = await prisma.user.findUnique({
+            where: { username },
+            select: { id: true },
+        })
+        if (!check && !RESERVED_USERNAMES.includes(username)) {
+            return username
+        }
+        suffix++
+        username = `${baseUsername}${suffix}`
+    }
+}
 
 export async function POST(request: Request) {
     try {
@@ -32,17 +71,21 @@ export async function POST(request: Request) {
             )
         }
 
-        // Hash password and create user
+        // Hash password and generate username
         const passwordHash = await hashPassword(password)
+        const baseUsername = generateUsername(email)
+        const username = await getUniqueUsername(baseUsername)
 
         const user = await prisma.user.create({
             data: {
                 email,
                 passwordHash,
+                username,
             },
             select: {
                 id: true,
                 email: true,
+                username: true,
                 createdAt: true,
             },
         })

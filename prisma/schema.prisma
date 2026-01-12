@@ -12,13 +12,15 @@ enum PostType {
 }
 
 enum PostStatus {
-  PRIVATE
-  PUBLIC
+  PRIVATE    // Inner Only
+  DRAFT      // Outer Initial State
+  PUBLISHED  // Outer Visible State
 }
 
 model User {
   id             String   @id @default(uuid())
   email          String   @unique
+  username       String   @unique // Mandatory for public routing
   passwordHash   String   @map("password_hash")
   viewPreference String   @default("list") @map("view_preference")
   createdAt      DateTime @default(now()) @map("created_at")
@@ -29,19 +31,43 @@ model User {
 }
 
 model Post {
-  id        String      @id @default(uuid())
-  userId    String      @map("user_id")
-  type      PostType    @default(INNER)
-  status    PostStatus  @default(PRIVATE)
-  title     String?
-  bodyText  String      @map("body_text") @db.Text
-  createdAt DateTime    @map("created_at")
-  dayKey    DateTime    @map("day_key") @db.Date
-  deletedAt DateTime?   @map("deleted_at")
+  id        String     @id @default(uuid())
+  userId    String     @map("user_id")
+  type      PostType   @default(INNER)
+  status    PostStatus @default(PRIVATE)
+
+  // Inner logic (Existing)
+  dayKey DateTime? @map("day_key") @db.Date // Nullable for Outer
+
+  // Outer Content
+  title       String?
+  bodyText    String  @map("body_text") @db.Text
+  contentJson Json?   @map("content_json") // Tiptap JSON (Source of Truth)
+  contentHtml String? @map("content_html") @db.Text // SEO HTML
+
+  // Outer Meta
+  excerpt     String? @db.Text
+  slug        String? // Scoped Unique per User
+  coverImage  String? @map("cover_image")
+  readingTime Int?    @map("reading_time")
+
+  // Portfolio Settings
+  isFeatured Boolean @default(false) @map("is_featured")
+  gridSize   String? @map("grid_size") // '1x1' | '2x2'
+
+  // Timestamps
+  createdAt   DateTime  @map("created_at")
+  updatedAt   DateTime? @updatedAt @map("updated_at") // System use
+  publishedAt DateTime? @map("published_at") // User facing date
+  deletedAt   DateTime? @map("deleted_at") // Soft delete
+
+  // References Snapshot
+  references Json? // Array of Inner reference snapshots
 
   user User @relation(fields: [userId], references: [id])
 
-  @@index([userId, type, dayKey, createdAt])
-  @@index([userId, type, createdAt])
+  @@unique([userId, slug])
+  @@index([userId, type, dayKey])
+  @@index([userId, status, isFeatured])
   @@map("posts")
 }
