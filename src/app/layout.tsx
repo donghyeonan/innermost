@@ -29,6 +29,13 @@ export const metadata: Metadata = {
   description: "A deeply personal space for your innermost thoughts",
 };
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
