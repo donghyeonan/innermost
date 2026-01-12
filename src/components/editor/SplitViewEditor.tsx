@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { TiptapEditor } from './TiptapEditor'
 import { ReferencePanel } from './ReferencePanel'
-import { Save, Eye, Send, ArrowLeft, Loader2 } from 'lucide-react'
+import { Save, Eye, Send, ArrowLeft, Loader2, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
 import dayjs from 'dayjs'
 
@@ -153,6 +153,29 @@ export function SplitViewEditor({ post, onSave }: SplitViewEditorProps) {
         }
     }
 
+    const handleDelete = async () => {
+        if (!confirm('Are you sure you want to delete this post?')) return
+
+        setSaving(true)
+        try {
+            const res = await fetch(`/api/outer-posts/${postId}`, {
+                method: 'DELETE',
+            })
+
+            if (res.ok) {
+                toast.success('Post deleted')
+                router.push('/outer')
+            } else {
+                toast.error('Failed to delete post')
+            }
+        } catch (error) {
+            console.error('Delete error:', error)
+            toast.error('Failed to delete')
+        } finally {
+            setSaving(false)
+        }
+    }
+
     // Auto-save every 30 seconds
     useEffect(() => {
         if (!postId || !contentJson) return
@@ -165,28 +188,28 @@ export function SplitViewEditor({ post, onSave }: SplitViewEditorProps) {
     }, [postId, title, bodyText, contentJson, references])
 
     return (
-        <div className="h-screen flex flex-col bg-white dark:bg-gray-950">
+        <div className="h-screen flex flex-col bg-white overflow-hidden">
             {/* Header */}
-            <header className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-800">
+            <header className="flex items-center justify-between px-6 py-4 border-b border-gray-100 bg-white z-10">
                 <div className="flex items-center gap-4">
                     <button
                         onClick={() => router.push('/dashboard/outer')}
-                        className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
+                        className="p-2 text-gray-500 hover:bg-gray-50 hover:text-gray-900 rounded-full transition-colors"
                         type="button"
                     >
                         <ArrowLeft size={20} />
                     </button>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-3">
                         <span
-                            className={`text-xs px-2 py-0.5 rounded-full ${status === 'PUBLISHED'
-                                    ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
-                                    : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400'
+                            className={`text-[10px] tracking-widest uppercase font-semibold px-2 py-1 rounded-full ${status === 'PUBLISHED'
+                                ? 'bg-green-50 text-green-700'
+                                : 'bg-gray-100 text-gray-500'
                                 }`}
                         >
                             {status === 'PUBLISHED' ? 'Published' : 'Draft'}
                         </span>
                         {lastSaved && (
-                            <span className="text-xs text-gray-500">
+                            <span className="text-xs text-gray-400 font-sans">
                                 Saved {dayjs(lastSaved).format('h:mm A')}
                             </span>
                         )}
@@ -195,10 +218,18 @@ export function SplitViewEditor({ post, onSave }: SplitViewEditorProps) {
 
                 <div className="flex items-center gap-2">
                     <button
+                        onClick={handleDelete}
+                        className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors mr-2"
+                        title="Delete Post"
+                        type="button"
+                    >
+                        <Trash2 size={18} />
+                    </button>
+                    <button
                         onClick={() => setShowReferences(!showReferences)}
-                        className={`px-3 py-1.5 text-sm rounded-lg border ${showReferences
-                                ? 'border-blue-500 text-blue-600 bg-blue-50 dark:bg-blue-900/20'
-                                : 'border-gray-200 dark:border-gray-700'
+                        className={`px-4 py-2 text-sm font-medium rounded-lg border transition-colors ${showReferences
+                            ? 'border-gray-900 text-gray-900 bg-transparent'
+                            : 'border-gray-200 text-gray-500 hover:text-gray-900 hover:border-gray-300'
                             }`}
                         type="button"
                     >
@@ -207,7 +238,7 @@ export function SplitViewEditor({ post, onSave }: SplitViewEditorProps) {
                     <button
                         onClick={handleSave}
                         disabled={saving || !postId}
-                        className="flex items-center gap-2 px-3 py-1.5 text-sm bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg disabled:opacity-50"
+                        className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 bg-transparent hover:bg-gray-50 rounded-lg disabled:opacity-50"
                         type="button"
                     >
                         {saving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
@@ -216,7 +247,7 @@ export function SplitViewEditor({ post, onSave }: SplitViewEditorProps) {
                     <button
                         onClick={handlePublish}
                         disabled={publishing || !postId || !title || !bodyText}
-                        className="flex items-center gap-2 px-4 py-1.5 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg disabled:opacity-50"
+                        className="flex items-center gap-2 px-6 py-2 text-sm font-medium bg-[#111] hover:bg-black text-white rounded-full shadow-sm disabled:opacity-50 transition-transform active:scale-95"
                         type="button"
                     >
                         {publishing ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
@@ -229,7 +260,7 @@ export function SplitViewEditor({ post, onSave }: SplitViewEditorProps) {
             <div className="flex-1 flex overflow-hidden">
                 {/* Reference panel (collapsible) */}
                 {showReferences && (
-                    <aside className="w-80 flex-shrink-0 overflow-hidden">
+                    <aside className="w-[320px] flex-shrink-0 overflow-hidden border-r border-gray-100 bg-[#F8F9FA]">
                         <ReferencePanel
                             references={references}
                             onAddReference={handleAddReference}
@@ -238,40 +269,47 @@ export function SplitViewEditor({ post, onSave }: SplitViewEditorProps) {
                     </aside>
                 )}
 
-                {/* Editor area */}
-                <main className="flex-1 overflow-y-auto">
-                    <div className="max-w-3xl mx-auto p-8">
-                        {/* Title input */}
+                {/* Editor area - PURE WHITE CANVAS */}
+                <main className="flex-1 overflow-y-auto bg-white custom-scrollbar">
+                    <div className="max-w-3xl mx-auto py-16 px-8">
+                        {/* Title input - EDITORIAL SERIF */}
                         <input
                             type="text"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
-                            placeholder="Post title..."
-                            className="w-full text-4xl font-bold bg-transparent border-none outline-none mb-8 placeholder:text-gray-300 dark:placeholder:text-gray-600"
+                            placeholder="Post Title"
+                            className="w-full text-5xl font-serif font-bold text-[#111] bg-transparent border-none outline-none mb-6 placeholder:text-gray-200"
                         />
 
-                        {/* Editor */}
-                        <TiptapEditor
-                            contentJson={contentJson}
-                            placeholder="Start writing your post..."
-                            onChange={handleEditorChange}
-                        />
+                        {/* Editor Canvas */}
+                        <div className="min-h-[200px] mb-12">
+                            <TiptapEditor
+                                contentJson={contentJson}
+                                placeholder="Tell your story..."
+                                onChange={handleEditorChange}
+                                className="font-sans text-lg text-[#111] leading-relaxed"
+                            />
+                        </div>
 
-                        {/* References preview */}
+                        {/* References Preview - DARK BLOCKS */}
                         {references.length > 0 && (
-                            <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
-                                <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-4">
-                                    Referenced Inner Thoughts ({references.length})
+                            <div className="mt-12 pt-8 border-t border-gray-100">
+                                <h3 className="text-[10px] uppercase tracking-widest text-gray-400 font-semibold mb-6">
+                                    Referenced Inner Thoughts
                                 </h3>
-                                <div className="space-y-3">
+                                <div className="space-y-4">
                                     {references.map((ref) => (
                                         <blockquote
                                             key={ref.id}
-                                            className="pl-4 border-l-4 border-[#1a1f36] dark:border-blue-400 bg-[#1a1f36]/5 dark:bg-blue-900/10 py-3 pr-4 rounded-r-lg italic text-gray-700 dark:text-gray-300"
+                                            className="relative bg-[#0a0f1a] text-white p-6 rounded-lg shadow-xl"
                                         >
-                                            &ldquo;{ref.bodyText}&rdquo;
-                                            <footer className="mt-2 text-xs text-gray-500 not-italic">
-                                                — Inner thought from {dayjs(ref.createdAt).format('MMM D, YYYY')}
+                                            <div className="absolute top-0 left-0 w-1 h-full bg-blue-500 rounded-l-lg opacity-50"></div>
+                                            <p className="font-serif text-lg leading-relaxed opacity-90 italic mb-4">
+                                                &ldquo;{ref.bodyText}&rdquo;
+                                            </p>
+                                            <footer className="flex items-center justify-between text-xs text-gray-500 border-t border-white/10 pt-3 mt-2">
+                                                <span className="font-sans uppercase tracking-wider opacity-70">Inner Reflection</span>
+                                                <span className="font-mono opacity-50">{dayjs(ref.createdAt).format('MMM D, YYYY')}</span>
                                             </footer>
                                         </blockquote>
                                     ))}

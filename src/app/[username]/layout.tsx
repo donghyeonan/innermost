@@ -51,39 +51,42 @@ export default async function PublicProfileLayout({ children, params }: LayoutPr
     }
 
     return (
-        <div className="min-h-screen bg-white dark:bg-gray-950">
+        <div className="min-h-screen bg-white font-sans text-[#111]">
             {/* Navigation */}
-            <header className="sticky top-0 z-50 bg-white/80 dark:bg-gray-950/80 backdrop-blur-sm border-b border-gray-100 dark:border-gray-800">
-                <nav className="max-w-4xl mx-auto px-6 py-4">
+            <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-sm">
+                <nav className="max-w-4xl mx-auto px-6 py-6">
                     <div className="flex items-center justify-between">
                         <Link
                             href={`/${username}`}
-                            className="font-semibold text-gray-900 dark:text-gray-100"
+                            className="text-lg font-bold text-[#111] tracking-tight group flex items-center gap-2"
                         >
+                            <span className="w-8 h-8 flex items-center justify-center bg-[#111] text-white rounded-full">
+                                <span className="font-serif italic text-sm">i</span>
+                            </span>
                             @{username}
                         </Link>
-                        <div className="flex items-center gap-6">
+                        <div className="flex items-center gap-8">
                             <Link
                                 href={`/${username}`}
-                                className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100"
+                                className="text-sm font-medium text-gray-500 hover:text-[#111] transition-colors"
                             >
                                 Home
                             </Link>
                             <Link
                                 href={`/${username}/notes`}
-                                className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100"
+                                className="text-sm font-medium text-gray-500 hover:text-[#111] transition-colors"
                             >
                                 Notes
                             </Link>
                             <Link
                                 href={`/${username}/about`}
-                                className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100"
+                                className="text-sm font-medium text-gray-500 hover:text-[#111] transition-colors"
                             >
                                 About
                             </Link>
                             <Link
                                 href="/login"
-                                className="text-sm px-4 py-1.5 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 rounded-full hover:bg-gray-700 dark:hover:bg-gray-300"
+                                className="text-sm font-medium px-5 py-2 bg-[#111] text-white rounded-full hover:bg-black transition-transform active:scale-95"
                             >
                                 Login
                             </Link>
@@ -96,11 +99,19 @@ export default async function PublicProfileLayout({ children, params }: LayoutPr
             <main>{children}</main>
 
             {/* Footer */}
-            <footer className="border-t border-gray-100 dark:border-gray-800 mt-16">
-                <div className="max-w-4xl mx-auto px-6 py-8">
-                    <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
-                        <p>@{username}</p>
-                        <p>© {new Date().getFullYear()}</p>
+            <footer className="mt-24 pb-12">
+                <div className="max-w-4xl mx-auto px-6 pt-8 border-t border-gray-100">
+                    <div className="flex items-center justify-between text-xs text-gray-400 uppercase tracking-wider font-medium">
+                        <div className="flex items-center gap-2">
+                            <span className="font-serif italic text-gray-300">@{username}</span>
+                            <span>/</span>
+                            <span>© {new Date().getFullYear()}</span>
+                        </div>
+                        <div className="flex items-center gap-4">
+                            <a href="#" className="hover:text-gray-900 transition-colors">RSS</a>
+                            <a href="#" className="hover:text-gray-900 transition-colors">Twitter</a>
+                            <a href="#" className="hover:text-gray-900 transition-colors">GitHub</a>
+                        </div>
                     </div>
                 </div>
             </footer>

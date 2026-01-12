@@ -123,3 +123,11 @@
     @apply bg-background text-foreground;
   }
 }
+
+@utility font-serif {
+  font-family: var(--font-merriweather), ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+}
+
+@utility font-sans {
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}

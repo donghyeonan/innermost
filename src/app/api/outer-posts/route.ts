@@ -19,7 +19,11 @@ export async function POST(request: Request) {
         }
 
         const body = await request.json()
-        const result = createOuterPostSchema.safeParse(body)
+
+        // Extract references separately (optional, not validated by schema)
+        const { references, ...postData } = body
+
+        const result = createOuterPostSchema.safeParse(postData)
         if (!result.success) {
             return NextResponse.json(
                 { error: 'Validation failed', details: result.error.flatten() },
@@ -29,6 +33,18 @@ export async function POST(request: Request) {
 
         const { title, bodyText, contentJson } = result.data
 
+        // Validate references if provided
+        let validatedRefs = null
+        if (references && Array.isArray(references)) {
+            if (references.length > 10) {
+                return NextResponse.json(
+                    { error: 'Maximum 10 references allowed' },
+                    { status: 400 }
+                )
+            }
+            validatedRefs = references
+        }
+
         const post = await prisma.post.create({
             data: {
                 userId: user.userId,
@@ -36,7 +52,8 @@ export async function POST(request: Request) {
                 status: 'DRAFT',
                 title: title || 'Untitled',
                 bodyText: bodyText || '',
-                contentJson: contentJson || null,
+                contentJson: contentJson || undefined,
+                ...(validatedRefs && { references: validatedRefs }),
                 createdAt: new Date(),
             },
             select: {

@@ -38,7 +38,7 @@ export function TiptapEditor({
             Link.configure({
                 openOnClick: false,
                 HTMLAttributes: {
-                    class: 'text-blue-600 dark:text-blue-400 underline',
+                    class: 'text-blue-600 underline decoration-blue-200 hover:decoration-blue-400 transition-colors',
                 },
             }),
             Placeholder.configure({
@@ -49,7 +49,7 @@ export function TiptapEditor({
         editable,
         editorProps: {
             attributes: {
-                class: 'prose prose-slate dark:prose-invert max-w-none focus:outline-none min-h-[300px]',
+                class: 'prose prose-lg prose-neutral max-w-none focus:outline-none min-h-[300px] font-sans text-gray-900',
             },
         },
         onUpdate: ({ editor }) => {
@@ -90,17 +90,17 @@ export function TiptapEditor({
 
     if (!editor) {
         return (
-            <div className={`animate-pulse bg-gray-100 dark:bg-gray-800 rounded-lg h-[300px] ${className}`} />
+            <div className={`animate-pulse bg-gray-50 rounded-lg h-[300px] ${className}`} />
         )
     }
 
     return (
         <div className={`relative ${className}`}>
             {/* Toolbar */}
-            <div className="flex items-center gap-1 mb-4 pb-4 border-b border-gray-200 dark:border-gray-700 flex-wrap">
+            <div className="flex items-center gap-1 mb-6 pb-4 border-b border-gray-100 flex-wrap sticky top-0 bg-white/80 backdrop-blur-sm z-10 transition-all">
                 <button
                     onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-                    className={`p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 ${editor.isActive('heading', { level: 1 }) ? 'bg-gray-100 dark:bg-gray-800' : ''}`}
+                    className={`p-2 rounded-lg hover:bg-gray-100 transition-colors ${editor.isActive('heading', { level: 1 }) ? 'bg-gray-100 text-black' : 'text-gray-500'}`}
                     type="button"
                     title="Heading 1"
                 >
@@ -108,16 +108,16 @@ export function TiptapEditor({
                 </button>
                 <button
                     onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-                    className={`p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 ${editor.isActive('heading', { level: 2 }) ? 'bg-gray-100 dark:bg-gray-800' : ''}`}
+                    className={`p-2 rounded-lg hover:bg-gray-100 transition-colors ${editor.isActive('heading', { level: 2 }) ? 'bg-gray-100 text-black' : 'text-gray-500'}`}
                     type="button"
                     title="Heading 2"
                 >
                     <Heading2 size={18} />
                 </button>
-                <div className="w-px h-5 bg-gray-200 dark:bg-gray-700 mx-1" />
+                <div className="w-px h-5 bg-gray-200 mx-2" />
                 <button
                     onClick={() => editor.chain().focus().toggleBold().run()}
-                    className={`p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 ${editor.isActive('bold') ? 'bg-gray-100 dark:bg-gray-800' : ''}`}
+                    className={`p-2 rounded-lg hover:bg-gray-100 transition-colors ${editor.isActive('bold') ? 'bg-gray-100 text-black' : 'text-gray-500'}`}
                     type="button"
                     title="Bold"
                 >
@@ -125,16 +125,16 @@ export function TiptapEditor({
                 </button>
                 <button
                     onClick={() => editor.chain().focus().toggleItalic().run()}
-                    className={`p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 ${editor.isActive('italic') ? 'bg-gray-100 dark:bg-gray-800' : ''}`}
+                    className={`p-2 rounded-lg hover:bg-gray-100 transition-colors ${editor.isActive('italic') ? 'bg-gray-100 text-black' : 'text-gray-500'}`}
                     type="button"
                     title="Italic"
                 >
                     <Italic size={18} />
                 </button>
-                <div className="w-px h-5 bg-gray-200 dark:bg-gray-700 mx-1" />
+                <div className="w-px h-5 bg-gray-200 mx-2" />
                 <button
                     onClick={() => editor.chain().focus().toggleBulletList().run()}
-                    className={`p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 ${editor.isActive('bulletList') ? 'bg-gray-100 dark:bg-gray-800' : ''}`}
+                    className={`p-2 rounded-lg hover:bg-gray-100 transition-colors ${editor.isActive('bulletList') ? 'bg-gray-100 text-black' : 'text-gray-500'}`}
                     type="button"
                     title="Bullet List"
                 >
@@ -142,7 +142,7 @@ export function TiptapEditor({
                 </button>
                 <button
                     onClick={() => editor.chain().focus().toggleOrderedList().run()}
-                    className={`p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 ${editor.isActive('orderedList') ? 'bg-gray-100 dark:bg-gray-800' : ''}`}
+                    className={`p-2 rounded-lg hover:bg-gray-100 transition-colors ${editor.isActive('orderedList') ? 'bg-gray-100 text-black' : 'text-gray-500'}`}
                     type="button"
                     title="Numbered List"
                 >
@@ -150,16 +150,16 @@ export function TiptapEditor({
                 </button>
                 <button
                     onClick={() => editor.chain().focus().toggleBlockquote().run()}
-                    className={`p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 ${editor.isActive('blockquote') ? 'bg-gray-100 dark:bg-gray-800' : ''}`}
+                    className={`p-2 rounded-lg hover:bg-gray-100 transition-colors ${editor.isActive('blockquote') ? 'bg-gray-100 text-black' : 'text-gray-500'}`}
                     type="button"
                     title="Quote"
                 >
                     <Quote size={18} />
                 </button>
-                <div className="w-px h-5 bg-gray-200 dark:bg-gray-700 mx-1" />
+                <div className="w-px h-5 bg-gray-200 mx-2" />
                 <button
                     onClick={setLink}
-                    className={`p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 ${editor.isActive('link') ? 'bg-gray-100 dark:bg-gray-800' : ''}`}
+                    className={`p-2 rounded-lg hover:bg-gray-100 transition-colors ${editor.isActive('link') ? 'bg-gray-100 text-black' : 'text-gray-500'}`}
                     type="button"
                     title="Add Link"
                 >
@@ -167,7 +167,7 @@ export function TiptapEditor({
                 </button>
                 <button
                     onClick={addImage}
-                    className="p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800"
+                    className="p-2 rounded-lg hover:bg-gray-100 text-gray-500 transition-colors"
                     type="button"
                     title="Add Image"
                 >

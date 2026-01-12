@@ -52,7 +52,7 @@ export default async function OuterPostsPage() {
                     </p>
                 </div>
                 <Link
-                    href="/dashboard/outer/new"
+                    href="/archive"
                     className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
                 >
                     <Plus size={18} />
@@ -82,7 +82,7 @@ export default async function OuterPostsPage() {
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <Link
-                                        href={`/dashboard/outer/${post.id}/edit`}
+                                        href={`/outer/${post.id}/edit`}
                                         className="p-2 hover:bg-yellow-100 dark:hover:bg-yellow-900/20 rounded-lg transition-colors"
                                     >
                                         <Edit2 size={18} className="text-gray-600 dark:text-gray-400" />
@@ -132,7 +132,7 @@ export default async function OuterPostsPage() {
                                         </Link>
                                     )}
                                     <Link
-                                        href={`/dashboard/outer/${post.id}/edit`}
+                                        href={`/outer/${post.id}/edit`}
                                         className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
                                     >
                                         <Edit2 size={18} className="text-gray-600 dark:text-gray-400" />
