@@ -32,7 +32,8 @@ function LoginForm() {
             }
 
             toast.success('Welcome back!')
-            router.push(redirect)
+            // Use window.location for full page reload to ensure cookies are sent
+            window.location.href = redirect
         } catch (error) {
             toast.error('Login failed', {
                 description: error instanceof Error ? error.message : 'Please try again',
