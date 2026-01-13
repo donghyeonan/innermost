@@ -31,7 +31,7 @@ export async function GET() {
                 deletedAt: null,
             },
             orderBy: {
-                createdAt: 'desc',
+                createdAt: 'asc',
             },
             select: {
                 id: true,
