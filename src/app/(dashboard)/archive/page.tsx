@@ -52,7 +52,7 @@ export default function ArchivePage() {
                     <CalendarIcon className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                    <h1 className="text-2xl font-bold">Private Archive</h1>
+                    <h1 className="text-2xl font-serif font-bold">Private Archive</h1>
                     <p className="text-sm text-muted-foreground">
                         {totalEntries} entries in {dayjs(currentMonth).format('MMMM YYYY')}
                     </p>

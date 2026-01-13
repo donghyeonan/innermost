@@ -236,7 +236,7 @@ export default function ArchiveDatePage({
                             </div>
                         )}
 
-                        <h1 className="text-3xl font-bold text-primary">{displayDate}</h1>
+                        <h1 className="text-3xl font-serif font-bold text-foreground">{displayDate}</h1>
                     </div>
 
                     {/* Entry list with selection */}

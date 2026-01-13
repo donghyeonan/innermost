@@ -86,7 +86,7 @@ export default function DashboardPage() {
         <div className="max-w-4xl mx-auto space-y-8 pt-8 lg:pt-0">
             {/* Date header */}
             <div>
-                <h1 className="text-3xl font-bold text-foreground">{displayDate}</h1>
+                <h1 className="text-3xl font-serif font-bold text-foreground">{displayDate}</h1>
                 <div className="flex items-center gap-3 mt-2">
                     <span className="flex items-center gap-1.5 text-sm">
                         <span className="w-2 h-2 rounded-full bg-green-500" />
