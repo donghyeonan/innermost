@@ -126,7 +126,7 @@
 }
 
 @utility font-serif {
-  font-family: var(--font-playfair), ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  font-family: var(--font-merriweather), ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
 }
 
 @utility font-sans {

@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { Shield, Globe } from "lucide-react";
+import SplineBackground from "@/components/SplineBackground";
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-white text-black font-sans">
       {/* Header */}
-      <header className="w-full px-6 md:px-12 lg:px-20 py-6 flex items-center justify-between">
+      <header className="w-full px-6 md:px-12 lg:px-20 py-6 flex items-center justify-between relative z-20">
         <Link href="/" className="font-serif text-xl md:text-2xl font-bold tracking-tight">
           Innermost
         </Link>
@@ -31,25 +32,31 @@ export default function Home() {
         </nav>
       </header>
 
-      {/* Hero Section */}
-      <main className="flex flex-col items-center justify-center px-6 py-20 md:py-32 lg:py-40">
-        <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-medium text-center leading-tight tracking-tight max-w-4xl">
-          Your Private Thoughts,
-          <br />
-          <span className="italic">Clarified.</span>
-        </h1>
+      {/* Hero Section with 3D Background */}
+      <section className="relative w-full min-h-[calc(100vh-88px)] flex flex-col items-center justify-center overflow-hidden">
+        {/* Layer 1: 3D Spline Background (Desktop only) */}
+        <SplineBackground />
 
-        <p className="mt-6 md:mt-8 text-base md:text-lg text-gray-600 text-center max-w-xl leading-relaxed">
-          Daily record your inner thoughts in private → Curate and post to public later.
-        </p>
+        {/* Layer 2: Content (Must sit on top) */}
+        <main className="relative z-10 flex flex-col items-center justify-center px-6 py-20 md:py-32 lg:py-40">
+          <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-medium text-center leading-tight tracking-tight max-w-4xl">
+            Your Private Thoughts,
+            <br />
+            <span className="italic">Clarified.</span>
+          </h1>
 
-        <Link
-          href="/register"
-          className="mt-10 md:mt-12 px-8 py-3 bg-black text-white text-sm tracking-widest font-medium hover:bg-gray-800 transition-colors rounded-sm"
-        >
-          GET STARTED
-        </Link>
-      </main>
+          <p className="mt-6 md:mt-8 text-base md:text-lg text-gray-600 text-center max-w-xl leading-relaxed">
+            Daily record your inner thoughts in private → Curate and post to public later.
+          </p>
+
+          <Link
+            href="/register"
+            className="mt-10 md:mt-12 px-8 py-3 bg-black text-white text-sm tracking-widest font-medium hover:bg-gray-800 transition-colors rounded-sm"
+          >
+            GET STARTED
+          </Link>
+        </main>
+      </section>
 
       {/* Features Section */}
       <section className="px-6 md:px-12 lg:px-20 py-16 md:py-24 lg:py-32">
