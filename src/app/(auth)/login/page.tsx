@@ -3,9 +3,6 @@
 import { useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { toast } from 'sonner'
 
 function LoginForm() {
@@ -46,57 +43,96 @@ function LoginForm() {
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center p-4 bg-background">
-            <Card className="w-full max-w-md">
-                <CardHeader className="text-center">
-                    <CardTitle className="text-2xl">Welcome to Innermost</CardTitle>
-                    <CardDescription>Sign in to your private workspace</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        <div className="space-y-2">
-                            <label htmlFor="email" className="text-sm font-medium">
+        <div className="min-h-screen bg-black text-white font-sans">
+            {/* Header */}
+            <header className="w-full px-6 md:px-12 py-6 flex items-center justify-between">
+                <Link href="/" className="font-serif text-xl md:text-2xl font-bold tracking-tight">
+                    Innermost
+                </Link>
+                <Link
+                    href="/"
+                    className="text-sm text-gray-400 hover:text-white transition-colors"
+                >
+                    Back to home
+                </Link>
+            </header>
+
+            {/* Main Form */}
+            <main className="flex flex-col items-center justify-center px-6 py-16 md:py-24 lg:py-32">
+                <div className="w-full max-w-md">
+                    {/* Title */}
+                    <div className="text-center mb-10 md:mb-12">
+                        <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight">
+                            Welcome to
+                            <br />
+                            Innermost
+                        </h1>
+                        <p className="mt-4 text-gray-400">
+                            Sign in to your private workspace
+                        </p>
+                    </div>
+
+                    {/* Form */}
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        <div className="space-y-1">
+                            <label
+                                htmlFor="email"
+                                className="text-sm text-gray-500"
+                            >
                                 Email
                             </label>
-                            <Input
+                            <input
                                 id="email"
                                 type="email"
-                                placeholder="you@example.com"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
                                 disabled={isLoading}
+                                className="w-full bg-transparent border-b border-gray-800 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-gray-600 transition-colors disabled:opacity-50"
+                                placeholder="you@example.com"
                             />
                         </div>
 
-                        <div className="space-y-2">
-                            <label htmlFor="password" className="text-sm font-medium">
+                        <div className="space-y-1">
+                            <label
+                                htmlFor="password"
+                                className="text-sm text-gray-500"
+                            >
                                 Password
                             </label>
-                            <Input
+                            <input
                                 id="password"
                                 type="password"
-                                placeholder="••••••••"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 required
                                 disabled={isLoading}
+                                className="w-full bg-transparent border-b border-gray-800 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-gray-600 transition-colors disabled:opacity-50"
+                                placeholder="••••••••"
                             />
                         </div>
 
-                        <Button type="submit" className="w-full" disabled={isLoading}>
-                            {isLoading ? 'Signing in...' : 'Sign In'}
-                        </Button>
+                        <button
+                            type="submit"
+                            disabled={isLoading}
+                            className="w-full mt-8 py-3 bg-white text-black text-sm tracking-widest font-medium hover:bg-gray-100 transition-colors rounded-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            {isLoading ? 'SIGNING IN...' : 'SIGN IN'}
+                        </button>
                     </form>
 
-                    <div className="mt-6 text-center text-sm">
-                        <span className="text-muted-foreground">Don't have an account? </span>
-                        <Link href="/register" className="text-primary hover:underline">
+                    {/* Footer Link */}
+                    <div className="mt-8 text-center">
+                        <span className="text-gray-500">Don't have an account? </span>
+                        <Link
+                            href="/register"
+                            className="text-white hover:underline"
+                        >
                             Create one
                         </Link>
                     </div>
-                </CardContent>
-            </Card>
+                </div>
+            </main>
         </div>
     )
 }
@@ -104,8 +140,8 @@ function LoginForm() {
 export default function LoginPage() {
     return (
         <Suspense fallback={
-            <div className="min-h-screen flex items-center justify-center p-4 bg-background">
-                <div className="text-muted-foreground">Loading...</div>
+            <div className="min-h-screen flex items-center justify-center bg-black">
+                <div className="text-gray-400">Loading...</div>
             </div>
         }>
             <LoginForm />
